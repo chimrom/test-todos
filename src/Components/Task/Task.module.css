@@ -1,0 +1,41 @@
+.wrapperTask {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #dad0d0;
+  margin: 5px 0;
+  cursor: grab;
+}
+
+.wrapperItem {
+  display: flex;
+}
+
+.taskText {
+  width: 350px;
+  white-space: nowrap;
+}
+
+.taskText p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btnEdit {
+  border: 2px solid #008cba;
+  color: #008cba;
+  background-color: #fff;
+  padding: 10px;
+  margin-right: 5px;
+}
+
+.btnDelete {
+  background-color: #ee1d40;
+  color: #fff;
+  margin-right: 5px;
+}
+
+.btnOk {
+  background-color: #4caf50;
+  color: #fff;
+}
