@@ -63,9 +63,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (localStorageTasks) {
-      setTasks(localStorageTasks);
-    }
+    const localTasks = () => {
+      if (localStorageTasks) {
+        setTasks(localStorageTasks);
+      }
+    };
+    localTasks();
   }, []);
 
   const dragStartHandler = (e, task) => {
