@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Task } from "./Components/Task/Task";
 import { Button } from "./Components/UI/Button/Button";
 import "./Components/styles/main.css";
@@ -6,7 +6,10 @@ const App = () => {
   const [inputValue, setInputValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState(null);
-  const localStorageTasks = JSON.parse(localStorage.getItem("tasks"));
+  const localStorageTasks = useMemo(
+    () => JSON.parse(localStorage.getItem("tasks")),
+    []
+  );
 
   const createTask = () => {
     const task = {
@@ -62,15 +65,11 @@ const App = () => {
     );
   };
 
-  const getLocalStorageTasks = useCallback(() => {
+  useEffect(() => {
     if (localStorageTasks) {
       setTasks(localStorageTasks);
     }
-  }, []);
-
-  useEffect(() => {
-    getLocalStorageTasks();
-  }, [getLocalStorageTasks]);
+  }, [localStorageTasks]);
 
   const dragStartHandler = (e, task) => {
     setCurrentTask(task);
