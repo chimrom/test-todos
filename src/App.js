@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Task } from "./Components/Task/Task";
 import { Button } from "./Components/UI/Button/Button";
 import "./Components/styles/main.css";
@@ -62,14 +62,15 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    const localTasks = () => {
-      if (localStorageTasks) {
-        setTasks(localStorageTasks);
-      }
-    };
-    localTasks();
+  const getLocalStorageTasks = useCallback(() => {
+    if (localStorageTasks) {
+      setTasks(localStorageTasks);
+    }
   }, []);
+
+  useEffect(() => {
+    getLocalStorageTasks();
+  }, [getLocalStorageTasks]);
 
   const dragStartHandler = (e, task) => {
     setCurrentTask(task);
