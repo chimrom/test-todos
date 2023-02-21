@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Task } from "./Components/Task/Task";
 import { Button } from "./Components/UI/Button/Button";
 import "./Components/styles/main.css";
@@ -6,10 +6,17 @@ const App = () => {
   const [inputValue, setInputValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState(null);
-  const localStorageTasks = useMemo(
-    () => JSON.parse(localStorage.getItem("tasks")),
-    []
-  );
+
+  useEffect(() => {
+    const localStorageTasks = JSON.parse(localStorage.getItem("tasks"));
+    if (localStorageTasks) {
+      setTasks(localStorageTasks);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const createTask = () => {
     const task = {
@@ -21,29 +28,22 @@ const App = () => {
     if (inputValue.trim()) {
       setTasks((prevState) => [...prevState, task]);
       setInputValue("");
-      if (!localStorageTasks) {
-        localStorage.setItem("tasks", JSON.stringify([task]));
-        return;
-      }
-      localStorage.setItem("tasks", JSON.stringify([...tasks, task]));
     }
   };
   const ChangeInputValue = (e) => {
     setInputValue(e.target.value);
   };
   const deleteTask = (id) => {
-    setTasks((prevState) => prevState.filter((el) => id !== el.id));
-    localStorage.setItem(
-      "tasks",
-      JSON.stringify(localStorageTasks.filter((el) => id !== el.id))
+    setTasks((prevState) =>
+      prevState
+        .filter((el) => id !== el.id)
+        .map((el, index) => ({ ...el, order: index + 1 }))
     );
   };
   const toggleCheck = (id) => {
     setTasks((prevState) =>
       prevState.map((el) =>
-        el.id === id
-          ? { text: el.text, id: el.id, isChecked: !el.isChecked }
-          : el
+        el.id === id ? { ...el, isChecked: !el.isChecked } : el
       )
     );
   };
@@ -57,19 +57,7 @@ const App = () => {
     setTasks((prevState) =>
       prevState.map((el) => (el.id === id ? { ...el, text } : el))
     );
-    localStorage.setItem(
-      "tasks",
-      JSON.stringify(
-        localStorageTasks.map((el) => (el.id === id ? { ...el, text } : el))
-      )
-    );
   };
-
-  useEffect(() => {
-    if (localStorageTasks) {
-      setTasks(localStorageTasks);
-    }
-  }, [localStorageTasks]);
 
   const dragStartHandler = (e, task) => {
     setCurrentTask(task);
@@ -87,15 +75,15 @@ const App = () => {
   const dropHandler = (e, task) => {
     e.preventDefault();
 
-    setTasks(
-      tasks.map((t) => {
-        if (t.id === task.id) {
-          return { ...t, order: currentTask.order };
+    setTasks((prevState) =>
+      prevState.map((el) => {
+        if (el.id === task.id) {
+          return { ...el, order: currentTask.order };
         }
-        if (t.id === currentTask.id) {
-          return { ...t, order: task.order };
+        if (el.id === currentTask.id) {
+          return { ...el, order: task.order };
         }
-        return t;
+        return el;
       })
     );
     e.target.style.background = "white";

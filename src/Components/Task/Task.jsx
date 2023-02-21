@@ -42,32 +42,38 @@ export const Task = memo(
     };
 
     return (
-      <div
-        className={styles.wrapperTask}
-        onDragStart={onDragStart}
-        onDragLeave={onDragEnd}
-        onDragEnd={onDragEnd}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        draggable={draggable}
-      >
-        <div>{index}.</div>
-        <div className={clsx(styles.wrapperItem, styles.taskText)}>
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={() => onCheck(id)}
-          />
+      <div>
+        <div
+          className={styles.wrapperTask}
+          onDragStart={onDragStart}
+          onDragLeave={onDragEnd}
+          onDragEnd={onDragEnd}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          draggable={draggable}
+        >
+          <div>{index}.</div>
+          <div className={clsx(styles.wrapperItem, styles.taskText)}>
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => onCheck(id)}
+            />
 
-          <p>{text}</p>
-        </div>
-        <div className={styles.wrapperItem}>
-          <Button text="Edit" className={styles.btnEdit} onClick={handleShow} />
-          <Button
-            text="Delete"
-            className={styles.btnDelete}
-            onClick={() => onDelete(id)}
-          />
+            <p>{text}</p>
+          </div>
+          <div className={styles.wrapperItem}>
+            <Button
+              text="Edit"
+              className={styles.btnEdit}
+              onClick={handleShow}
+            />
+            <Button
+              text="Delete"
+              className={styles.btnDelete}
+              onClick={() => onDelete(id)}
+            />
+          </div>
         </div>
         <Modal handleClose={handleClose} show={show}>
           <input
